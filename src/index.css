@@ -5,3 +5,7 @@
 .heading {
   @apply mb-3 tracking-widest capitalize leading-5 md:leading-4;
 }
+
+.btn {
+  @apply absolute top-52 -translate-y-1/2 bg-gray-500 text-white w-5 h-5 grid place-items-center border-transparent text-base rounded-md cursor-pointer transition-all ease-linear duration-300 hover:bg-blue-500;
+}
