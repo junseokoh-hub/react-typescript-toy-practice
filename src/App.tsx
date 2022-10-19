@@ -1,18 +1,29 @@
-import React from "react";
-import Review from "./Review";
+import React, { useState } from "react";
+import data from "./data";
+import SingleQuestion from "./Question";
+
+export interface QuestionType {
+  id?: number;
+  title: string;
+  info: string;
+}
 
 const App: React.FC = () => {
+  const [questions, setQuestions] = useState<QuestionType[]>(data);
   return (
-    <main className="min-h-screen grid place-items-center">
-      <section className="w-[80vw] max-w-2xl">
-        <div className="mb-16 text-center">
-          <h2 className="mb-3 text-3xl tracking-widest capitalize leading-5">
-            our reviews
-          </h2>
-          <div className="mx-auto w-20 h-1 bg-blue-400"></div>
-        </div>
-        <Review />
-      </section>
+    <main className="min-h-screen flex justify-center items-center">
+      <div className="py-10 px-8 my-20 mx-auto max-w-4xl text-xl grid gap-y-4 gap-x-8 w-[90vw] leading-5 tracking-widest capitalize bg-white rounded-md md:grid md:grid-cols-[250px_1fr] md:text-3xl">
+        <h3 className="leading-5 font-medium">
+          questions and answers about login
+        </h3>
+        <section className="info">
+          {questions.map((question) => {
+            return (
+              <SingleQuestion key={question.id} {...question}></SingleQuestion>
+            );
+          })}
+        </section>
+      </div>
     </main>
   );
 };
