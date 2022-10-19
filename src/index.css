@@ -2,6 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-.btn {
-  @apply my-0 mx-2 text-blue-600 text-lg border-transparent bg-transparent cursor-pointer transition-all ease-linear duration-300 hover:text-blue-400;
+.heading {
+  @apply mb-3 tracking-widest capitalize leading-5 md:leading-4;
 }

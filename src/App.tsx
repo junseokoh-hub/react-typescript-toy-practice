@@ -1,29 +1,41 @@
 import React, { useState } from "react";
-import data from "./data";
-import SingleQuestion from "./Question";
+import Menu from "./Menu";
+import Categories from "./Categories";
+import items from "./data";
+const allCategories = ["all", ...new Set(items.map((item) => item.category))];
 
-export interface QuestionType {
-  id?: number;
+export interface MenuType {
+  id: number;
   title: string;
-  info: string;
+  category: string;
+  price: number;
+  img: string;
+  desc: string;
 }
 
 const App: React.FC = () => {
-  const [questions, setQuestions] = useState<QuestionType[]>(data);
+  const [menuItems, setMenuItems] = useState<MenuType[]>(items);
+  const [categories, setCategories] = useState<string[]>(allCategories);
+
+  const filterItems = (category: string) => {
+    if (category === "all") {
+      setMenuItems(items);
+      return;
+    }
+    const newItems = items.filter((item) => item.category === category);
+    setMenuItems(newItems);
+  };
+
   return (
-    <main className="min-h-screen flex justify-center items-center">
-      <div className="py-10 px-8 my-20 mx-auto max-w-4xl text-xl grid gap-y-4 gap-x-8 w-[90vw] leading-5 tracking-widest capitalize bg-white rounded-md md:grid md:grid-cols-[250px_1fr] md:text-3xl">
-        <h3 className="leading-5 font-medium">
-          questions and answers about login
-        </h3>
-        <section className="info">
-          {questions.map((question) => {
-            return (
-              <SingleQuestion key={question.id} {...question}></SingleQuestion>
-            );
-          })}
-        </section>
-      </div>
+    <main>
+      <section className="py-20 px-0 my-0 mx-auto w-[90vw] max-w-6xl md: w-[95vw]">
+        <div className="mb-8 text-center">
+          <h2 className="heading text-3xl md:text-4xl">our menu</h2>
+          <div className="mx-auto w-20 h-1 bg-yellow-200"></div>
+        </div>
+        <Categories categories={categories} filterItems={filterItems} />
+        <Menu items={menuItems} />
+      </section>
     </main>
   );
 };
