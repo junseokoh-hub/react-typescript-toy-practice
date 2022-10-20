@@ -11,5 +11,9 @@
 }
 
 .btn {
-  @apply uppercase bg-blue-600 text-white py-1 px-3 tracking-widest inline-block font-bold transition-all duration-300 ease-linear text-sm border-none cursor-pointer shadow-md hover:text-blue-600 hover:bg-blue-300;
+  @apply uppercase tracking-widest text-green-800 border-2 border-solid border-green-800 py-2 px-3 inline-block transition-all duration-300 ease-linear cursor-pointer text-sm bg-transparent rounded-md hover:bg-green-800 hover:text-white;
+}
+
+.loader {
+  @apply bg-transparent animate-bounce w-4 h-16;
 }

@@ -1,97 +1,78 @@
-import React, { useState, useContext, useReducer, useEffect } from "react";
-import cartItems from "./data";
-import reducer from "./reducer";
-// ATTENTION!!!!!!!!!!
-// I SWITCHED TO PERMANENT DOMAIN
+import { useState, useContext, useEffect, createContext } from "react";
+import { useCallback } from "react";
 
-export interface CartItems {
-  id: number;
-  title: string;
-  price: number;
-  img: string;
-  amount: number;
+interface Cocktail {
+  idDrink: string;
+  strDrink: string;
+  strDrinkThumb: string;
+  strAlcoholic: string;
+  strGlass: string;
 }
 
-export interface InitialState {
-  loading: boolean;
-  cart: CartItems[];
-  total: number;
-  amount: number;
+export interface NewCocktail {
+  id: string;
+  name: string;
+  image: string;
+  info: string;
+  glass: string;
 }
 
 interface AppContext {
   loading: boolean;
-  cart: CartItems[];
-  total: number;
-  amount: number;
-  clearCart: () => void;
-  remove: (id: number) => void;
-  increase: (id: number) => void;
-  decrease: (id: number) => void;
-  toggleAmount: (id: number, type: "inc" | "dec") => void;
+  cocktails: NewCocktail[];
+  searchTerm: string;
+  setSearchTerm: (text: string) => void;
 }
 
-const url = "https://course-api.com/react-useReducer-cart-project";
-const AppContext = React.createContext<AppContext>({
-  loading: false,
-  cart: cartItems,
-  total: 0,
-  amount: 0,
-  clearCart: () => {},
-  remove: () => {},
-  increase: () => {},
-  decrease: () => {},
-  toggleAmount: () => {},
+const url = "https://www.thecocktaildb.com/api/json/v1/1/search.php?s=";
+const AppContext = createContext<AppContext>({
+  loading: true,
+  cocktails: [],
+  searchTerm: "a",
+  setSearchTerm: () => {},
 });
 
-const initialState = {
-  loading: false,
-  cart: cartItems,
-  total: 0,
-  amount: 0,
-};
-
 const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("a");
+  const [cocktails, setCocktails] = useState([]);
 
-  const clearCart = () => {
-    dispatch({ type: "CLEAR_CART" });
-  };
-  const remove = (id: number) => {
-    dispatch({ type: "REMOVE", payload: id });
-  };
-  const increase = (id: number) => {
-    dispatch({ type: "INCREASE", payload: id });
-  };
-  const decrease = (id: number) => {
-    dispatch({ type: "DECREASE", payload: id });
-  };
-  const fetchData = async () => {
-    dispatch({ type: "LOADING" });
-    const response = await fetch(url);
-    const cart = await response.json();
-    dispatch({ type: "DISPLAY_ITEMS", payload: cart });
-  };
-  const toggleAmount = (id: number, type: "inc" | "dec") => {
-    dispatch({ type: "TOGGLE_AMOUNT", payload: { id, type } });
-  };
-  useEffect(() => {
-    fetchData();
-  }, []);
+  const fetchDrinks = useCallback(async () => {
+    setLoading(true);
+    try {
+      const response = await fetch(`${url}${searchTerm}`);
+      const data = await response.json();
+      console.log(data);
+      const { drinks } = data;
+      if (drinks) {
+        const newCocktails = drinks.map((item: Cocktail) => {
+          const { idDrink, strDrink, strDrinkThumb, strAlcoholic, strGlass } =
+            item;
 
+          return {
+            id: idDrink,
+            name: strDrink,
+            image: strDrinkThumb,
+            info: strAlcoholic,
+            glass: strGlass,
+          };
+        });
+        setCocktails(newCocktails);
+      } else {
+        setCocktails([]);
+      }
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
+  }, [searchTerm]);
   useEffect(() => {
-    dispatch({ type: "GET_TOTALS" });
-  }, [state.cart]);
+    fetchDrinks();
+  }, [searchTerm, fetchDrinks]);
   return (
     <AppContext.Provider
-      value={{
-        ...state,
-        clearCart,
-        remove,
-        increase,
-        decrease,
-        toggleAmount,
-      }}
+      value={{ loading, cocktails, searchTerm, setSearchTerm }}
     >
       {children}
     </AppContext.Provider>

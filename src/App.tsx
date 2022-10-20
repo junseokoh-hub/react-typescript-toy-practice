@@ -1,26 +1,23 @@
-import React from "react";
-import { useGlobalContext } from "./context";
-
-// components
-import Navbar from "./Navbar";
-import CartContainer from "./CartContainer";
-// items
-
-const App: React.FC = () => {
-  const { loading } = useGlobalContext();
-  if (loading) {
-    return (
-      <div className="mt-20 text-center">
-        <h1>Loading...</h1>
-      </div>
-    );
-  }
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+// import pages
+import Home from "./pages/Home";
+import About from "./pages/About";
+import SingleCocktail from "./pages/SingleCocktail";
+import Error from "./pages/Error";
+// import components
+import Navbar from "./components/Navbar";
+function App() {
   return (
-    <main>
+    <Router>
       <Navbar />
-      <CartContainer />
-    </main>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="about" element={<About />} />
+        <Route path="cocktail/:id" element={<SingleCocktail />} />
+        <Route path="*" element={<Error />} />
+      </Routes>
+    </Router>
   );
-};
+}
 
 export default App;
