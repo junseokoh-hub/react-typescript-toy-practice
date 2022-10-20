@@ -1,15 +1,25 @@
 import React from "react";
-import Modal from "./Modal";
-import Sidebar from "./Sidebar";
-import Home from "./Home";
+import { useGlobalContext } from "./context";
+
+// components
+import Navbar from "./Navbar";
+import CartContainer from "./CartContainer";
+// items
 
 const App: React.FC = () => {
+  const { loading } = useGlobalContext();
+  if (loading) {
+    return (
+      <div className="mt-20 text-center">
+        <h1>Loading...</h1>
+      </div>
+    );
+  }
   return (
-    <>
-      <Home />
-      <Modal />
-      <Sidebar />
-    </>
+    <main>
+      <Navbar />
+      <CartContainer />
+    </main>
   );
 };
 
